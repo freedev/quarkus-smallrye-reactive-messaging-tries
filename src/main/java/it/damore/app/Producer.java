@@ -24,7 +24,7 @@ public class Producer {
     }
 
     @Inject
-    @Channel("hello-channel")
+    @Channel("from-producer-to-consumer1")
     Emitter<String> emitter;
 
     public void periodicallySendMessage() {
@@ -32,11 +32,10 @@ public class Producer {
         Executors.newSingleThreadScheduledExecutor()
                 .scheduleAtFixedRate(() -> {
                             String message = "Hello " + counter.getAndIncrement();
-                            System.out.println("Emitting: " + message);
                             log.info("Emitting: " + message);
-                            emitter.send(Message.of(message));
+                            emitter.send(message);
                         },
-                        1, 500, TimeUnit.MILLISECONDS);
+                        1, 100, TimeUnit.MILLISECONDS);
     }
 
 }
