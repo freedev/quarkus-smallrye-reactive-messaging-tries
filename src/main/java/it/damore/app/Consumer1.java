@@ -23,7 +23,7 @@ public class Consumer1 {
 
     @Incoming("from-producer-to-consumer1")
     public Uni<Void> sendToProcessor(String message) {
-        log.info("consume from hello-channel");
+        log.info("Consumer1 - read from producer -> processor.onNext for msg " + message);
         processor.onNext(message);
         return Uni.createFrom().voidItem();
     }
@@ -31,6 +31,11 @@ public class Consumer1 {
     @Outgoing("from-consumer1-to-processor1")
     public Multi<String> produceMulti() {
         return Multi.createFrom()
-                .publisher(processor);
+                .publisher(processor)
+                .onItem()
+                .invoke(msg -> {
+                    log.info("Consumer1 - created publisher and calling invoke for msg " + msg);
+                })
+                .emitOn(Executors.newSingleThreadExecutor());
     }
 }

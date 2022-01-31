@@ -22,7 +22,8 @@ public class Consumer3 {
     @Incoming("from-processor2-to-consumer3")
     public CompletionStage<Void> consume(String msg) {
         return Uni.createFrom().item(msg)
-                .onItem().invoke(m -> log.info("message arrived"))
+                .onItem()
+                .invoke(m -> log.info("consumer3 message arrived"))
                 .replaceWithVoid()
                 .subscribeAsCompletionStage();
     }

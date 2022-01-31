@@ -1,6 +1,7 @@
 package it.damore.app;
 
 import io.smallrye.mutiny.Multi;
+import io.smallrye.mutiny.Uni;
 import io.smallrye.mutiny.operators.multi.processors.BroadcastProcessor;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
@@ -14,10 +15,7 @@ public class Processor2 {
 
     protected final Logger log;
 
-    BroadcastProcessor<String> messages;
-
     protected Processor2() {
-        this.messages = BroadcastProcessor.create();
         this.log = Logger.getLogger(getClass());
     }
 
@@ -26,11 +24,11 @@ public class Processor2 {
     public Multi<String> consumeMulti2Multi(Multi<String> stream) {
         return stream
                 .onItem()
-                .transform(msg -> {
-                    String manipulated = String.format("manipulated %s", msg);
-                    log.infof("manipulated message %s", manipulated);
-                    return manipulated;
-                });
+                .transformToUni(msg -> {
+                    String manipulated = String.format("XXX %s", msg);
+                    log.infof("processor2 manipulated message %s", manipulated);
+                    return Uni.createFrom().item(manipulated);
+                }).concatenate();
     }
 
 }
