@@ -2,6 +2,7 @@ package it.damore.app;
 
 import io.smallrye.mutiny.Multi;
 import io.smallrye.mutiny.Uni;
+import io.smallrye.mutiny.groups.MultiOnCompletion;
 import io.smallrye.mutiny.operators.multi.processors.BroadcastProcessor;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
@@ -20,12 +21,13 @@ public class Consumer3 {
     }
 
     @Incoming("from-processor2-to-consumer3")
-    public CompletionStage<Void> consume(String msg) {
-        return Uni.createFrom().item(msg)
-                .onItem()
-                .invoke(m -> log.info("consumer3 message arrived"))
-                .replaceWithVoid()
-                .subscribeAsCompletionStage();
+    public void consume(String msg) {
+        log.infof("consumer 3 received %s", msg);
+//        return Uni.createFrom().item(msg)
+//                .onItem()
+//                .invoke(m -> log.info("consumer3 message arrived"))
+//                .replaceWithVoid()
+//                .subscribeAsCompletionStage();
     }
 
 }

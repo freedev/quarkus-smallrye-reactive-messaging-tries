@@ -22,20 +22,14 @@ public class Consumer1 {
     }
 
     @Incoming("from-producer-to-consumer1")
-    public Uni<Void> sendToProcessor(String message) {
-        log.info("Consumer1 - read from producer -> processor.onNext for msg " + message);
-        processor.onNext(message);
-        return Uni.createFrom().voidItem();
+    @Outgoing("from-consumer1-to-processor1")
+    public Multi<String> consume(Multi<String> stream) {
+        log.info("Consumer1 - assemblyTime ");
+        return stream
+                .onItem()
+                .invoke(m -> {
+                   log.infof("consumer1 -> received message %s", m);
+                });
     }
 
-    @Outgoing("from-consumer1-to-processor1")
-    public Multi<String> produceMulti() {
-        return Multi.createFrom()
-                .publisher(processor)
-                .onItem()
-                .invoke(msg -> {
-                    log.info("Consumer1 - created publisher and calling invoke for msg " + msg);
-                })
-                .emitOn(Executors.newSingleThreadExecutor());
-    }
 }

@@ -35,9 +35,10 @@ public class Processor1 {
                     });
                     return Multi.createFrom().items(manipulatedStream);
                 })
-                .onItem()
-                .transformToUni(m -> Uni.createFrom().item(m))
-                .concatenate();
+//                .onItem()
+//                .transformToUni(m -> Uni.createFrom().item(m))
+//                .concatenate()
+                ;
     }
 
 }

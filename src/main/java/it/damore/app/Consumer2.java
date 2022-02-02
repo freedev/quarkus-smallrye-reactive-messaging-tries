@@ -22,7 +22,7 @@ public class Consumer2 {
 
     @Incoming("from-processor1-to-consumer2")
     @Outgoing("from-consumer2-to-processor2")
-    public Multi<String> sendToProcessor(Multi<String> stream) {
+    public Multi<String> consume(Multi<String> stream) {
         return stream.onItem().invoke(m -> {
             log.infof("consumer2 do something with %s", m);
         });
